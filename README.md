@@ -28,11 +28,11 @@ flowchart TD
 
     A[App State Machine] --> B[DHT Sensor Service]
 
-    B -->|publish(temp, humidity)| C[Event Bus]
+    B -->|publish(temp, humidity)| C[
 
     C --> D[OLED Display Service]
     C --> E[ESPNow Wireless Service]
-    C --> F[Logger Service]
+    C --> F[Logger Service]]
 
     E --> G[Remote ESP8266 Node]
 
