@@ -1,9 +1,4 @@
 #include "App.h"
-#include "OLEDService.h"
-#include "ESPNowService.h"
-#include "DHTService.h"
-#include "Logger.h"
-#include "Event.h"
 
 OLEDService oled;
 DHTService dht;
