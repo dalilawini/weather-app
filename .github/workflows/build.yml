@@ -31,8 +31,13 @@ jobs:
 
       - name: Install libraries
         run: |
-          arduino-cli lib update-index
+              arduino-cli lib update-index
+              arduino-cli lib install "ArduinoJson"
+              arduino-cli lib install "Adafruit SH110X"
+
+              mkdir -p ~/Arduino/libraries
+              git clone https://github.com/beegee-tokyo/DHTesp.git ~/Arduino/libraries/DHTesp
 
       - name: Compile project
         run: |
-          arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 .
+          arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 --build-property "compiler.cpp.extra_flags=-Iinc -Iapp -Idisplay -Isensors -Iwirless" -v
