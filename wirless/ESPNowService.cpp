@@ -24,6 +24,28 @@ void ESPNowService::begin() {
     Serial.println("ESP-NOW Ready");
 }
 
+void ESPNowService::scan() {
+    WiFi.mode(WIFI_STA);
+    WiFi.disconnect();
+  
+    Serial.println("Scanning...");
+    int n = WiFi.scanNetworks();
+
+    for (int i = 0; i < n; ++i) {
+        String name = WiFi.SSID(i);
+      
+        if (name.startsWith("ESP-NOW")) {
+            WiFi.begin(name, password); // 3. Attempt to connect to the specified network
+          Serial.printf("%d: %s MAC:%s Ch:%d RSSI:%d\n",
+                        i,
+                        name.c_str(),
+                        WiFi.BSSIDstr(i).c_str(),
+                        WiFi.channel(i),
+                        WiFi.RSSI(i));
+        }
+      }
+}
+
 void ESPNowService::onSensor(float temp, float hum) {
 
     SensorPacket packet;

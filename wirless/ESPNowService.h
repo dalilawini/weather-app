@@ -11,8 +11,9 @@ class ESPNowService {
 
 public:
     void begin();
+    void scan();
     static void onSensor(float temp, float hum);
-
+    const char* password = "12345678";
 
 };
 
