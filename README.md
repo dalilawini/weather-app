@@ -26,9 +26,7 @@ This ensures:
 ```mermaid
 flowchart TD
 
-    A[App State Machine] --> B[DHT Sensor Service]
-
-    B --> C[Event Bus]
+    A[App State Machine] --> B[DHT Sensor Service] --> C[Event Bus]
 
     C --> D[OLED Display Service]
     C --> E[ESPNow Wireless Service]
@@ -36,9 +34,8 @@ flowchart TD
 
     E --> G[Remote ESP8266 Node]
 
-    style A fill:#f2f2f2
+    style A fill:#66514E
     style C fill:#e6f7ff
-
 ```
 
 ### Components
@@ -74,11 +71,15 @@ The application logic runs inside a **Finite State Machine (FSM)**.
 ```mermaid
 stateDiagram-v2
     [*] --> INIT
-    INIT --> IDLE
-    IDLE --> READ_SENSOR
-    READ_SENSOR --> IDLE
-    IDLE --> ERROR
-    ERROR --> IDLE
+    INIT --> APP_CONNECT: Address isExist 
+    INIT --> APP_SCAN : Address notFound
+    APP_SCAN --> APP_CONNECT
+    APP_CONNECT -->APP_IDLE
+    
+    APP_IDLE --> APP_SCAN:  button hold pressed 
+    APP_IDLE --> APP_READ_SENSOR : lastTrigger > 2s
+    APP_READ_SENSOR --> APP_IDLE
+    
 ```
 
 The loop is non-blocking and relies on `millis()` timers.
@@ -90,6 +91,28 @@ The loop is non-blocking and relies on `millis()` timers.
 The system uses a **publish / subscribe model**.
 
 When sensor data is available, it is broadcast to all services.
+
+```mermaid
+sequenceDiagram
+
+    participant App
+    participant ESPNowService
+    participant EEPROMStorage
+    App->>EEPROMStorage: loading address
+    EEPROMStorage-->App: 
+    alt Address found
+    App->>ESPNowService: Start Esp-Now
+    else  Adress found
+    App->>+ESPNowService:WIFI Scaning 
+    ESPNowService-->ESPNowService:Scan Network
+    ESPNowService->>-App: is connected
+    ESPNowService-->App: get Mac Address
+    App->>EEPROMStorage: save Mac Address
+    App->>ESPNowService: Start Esp-Now
+    end
+```
+
+# ESP-NOW Flow Sequence
 
 ```mermaid
 sequenceDiagram
@@ -283,6 +306,10 @@ You can also install libraries automatically if they are listed in the project.
 Navigate to the project folder and run:
 
 ```bash
+arduino-cli compile \
+  --fqbn esp8266:esp8266:nodemcuv2 \
+  --build-property compiler.cpp.extra_flags="-Iapp -Idisplay -Iio -Isensors -Iwireless -Istorage" \
+  -v .
 arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 .
 ```
 
