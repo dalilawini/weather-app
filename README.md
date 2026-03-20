@@ -86,7 +86,7 @@ The loop is non-blocking and relies on `millis()` timers.
 
 ---
 
-# Event Flow Sequence
+# ESP-NOW Flow Sequence
 
 The system uses a **publish / subscribe model**.
 
@@ -112,7 +112,7 @@ sequenceDiagram
     end
 ```
 
-# ESP-NOW Flow Sequence
+# Event Flow Sequence
 
 ```mermaid
 sequenceDiagram
