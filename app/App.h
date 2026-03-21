@@ -6,12 +6,15 @@
 #include "DHTService.h"
 #include "Logger.h"
 #include "Event.h"
+#include "IO.h"
+#include "EEPROMStorage.h"
 
 enum AppState {
     APP_INIT,
+    APP_SCAN,
+    APP_CONNECT,
     APP_IDLE,
     APP_READ_SENSOR,
-    APP_ERROR
 };
 
 class App {
@@ -26,7 +29,17 @@ private:
     AppState state;
     unsigned long lastTrigger;
 
+    unsigned long lastAction;
+    bool scanStarted;
+
+    OLEDService oled;
     DHTService dht;
+    ESPNowService espNow;
+    IO io;
+    EEPROMStorage storage;
+
+    uint8_t peerMAC[6];
+
 };
 
 #endif

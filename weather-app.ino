@@ -3,7 +3,9 @@
 #include "./app/Logger.cpp"
 #include "./display/OLEDService.cpp"
 #include "./sensors/DHTService.cpp"
-#include "./wirless/ESPNowService.cpp"
+#include "./io/IO.cpp"
+#include "./storage/EEPROMStorage.cpp"
+#include "./wireless/ESPNowService.cpp"
 
 
 #include "App.h"
